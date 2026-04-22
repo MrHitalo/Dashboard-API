@@ -1,0 +1,63 @@
+### API Migrada do Laravel para C#
+### Equivalente às rotas do routes/api.php
+
+@baseUrl = http://localhost:5095
+@token = seu-token-aqui
+
+###
+# 1. REGISTRO DE USUÁRIO (POST /api/register)
+# Equivalente ao AuthController::register do Laravel
+POST {{baseUrl}}/api/register
+Content-Type: application/json
+
+{
+  "name": "João Silva",
+  "email": "joao@example.com",
+  "password": "123456"
+}
+
+###
+# 2. LOGIN (POST /api/login)
+# Equivalente ao AuthController::login do Laravel
+# Retorna o token JWT
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "joao@example.com",
+  "password": "123456"
+}
+
+###
+# 3. VER USUÁRIO (GET /api/users/{id})
+# Equivalente ao UserController::show do Laravel
+# REQUER TOKEN
+GET {{baseUrl}}/api/users/1
+Authorization: Bearer {{token}}
+
+###
+# 4. ATUALIZAR USUÁRIO (PUT /api/users/{id})
+# Equivalente ao UserController::update do Laravel
+# REQUER TOKEN
+PUT {{baseUrl}}/api/users/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "João Silva Atualizado",
+  "email": "joao.novo@example.com"
+}
+
+###
+# 5. DELETAR USUÁRIO (DELETE /api/users/{id})
+# Equivalente ao UserController::destroy do Laravel
+# REQUER TOKEN
+DELETE {{baseUrl}}/api/users/1
+Authorization: Bearer {{token}}
+
+###
+# 6. LOGOUT (POST /api/logout)
+# Equivalente ao AuthController::logout do Laravel
+# REQUER TOKEN
+POST {{baseUrl}}/api/logout
+Authorization: Bearer {{token}}
