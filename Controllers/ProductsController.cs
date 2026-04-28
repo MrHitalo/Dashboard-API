@@ -101,5 +101,4 @@ public class ProductsController : ControllerBase
         return Ok(new { message = "Produto deletado com sucesso" });
     }
 
-
 }

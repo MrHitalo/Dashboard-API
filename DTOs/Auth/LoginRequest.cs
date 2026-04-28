@@ -4,7 +4,6 @@ namespace Dashboard.DTOs.Auth;
 
 /// <summary>
 /// DTO para requisição de login
-/// Equivalente à validação do login() no AuthController do Laravel
 /// </summary>
 public class LoginRequest
 {
