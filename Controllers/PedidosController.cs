@@ -32,12 +32,43 @@ public class PedidosController: ControllerBase
         return Ok(pedidos); 
     }
 
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var pedidoId = await _context.Pedidos
+        var pedido = await _context.Pedidos
             .Include(p => p.Items)
             .FirstOrDefaultAsync(p => p.Id == id);
         
-        return Ok(pedidoId);
+        if (pedido == null) return NotFound(new { message = "Pedido não encotrado"}); 
+
+        return Ok(pedido);
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] PedidoCreateRequest request )
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        //Verifica se já existe um pedido com esse número
+        if (await _context.Pedidos.AnyAsync(p => p.Numero == request.Numero)) 
+            return BadRequest(new { message = "Já existe um pedido com este número" });
+
+        // Criar o pedido
+        var pedido = new Pedido { 
+            Numero = request.Numero,
+            NumeroCliente = request.NumeroCliente,
+            Cliente= request.Cliente,
+            Status = request.Status ?? "Pendente",
+            Prioridade = request.Prioridade ?? "Normal",
+            DataEntrada = request.DataEntrada ?? DateTime.UtcNow,
+            CreatedBy = request.CreatedBy
+        };
+
+        return Ok();
+
+
+
     }
 }
