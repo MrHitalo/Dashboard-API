@@ -66,7 +66,28 @@ public class PedidosController: ControllerBase
             CreatedBy = request.CreatedBy
         };
 
-        return Ok();
+        if (request.Items != null && request.Items.Any())
+        {
+            foreach (var itemRequest in request.Items)
+            {
+                var item = new PedidoItem
+                {
+                    Item = itemRequest.Item,
+                    Quantidade = itemRequest.Quantidade,
+                    ValorUnitario = itemRequest.ValorUnitario,
+                    Observacao = itemRequest.Observacao
+                };
+                pedido.Items.Add(item);
+            }
+        }
+
+        _context.Pedidos.Add(pedido);
+        await _context.SaveChangesAsync();
+
+        // Recarrega o pedido com os items para retornar completo
+        await _context.Entry(pedido).Collection(p => p.Items).LoadAsync();
+
+        return CreatedAtAction(nameof(GetById), new { id = pedido.Id }, pedido);
 
 
 
